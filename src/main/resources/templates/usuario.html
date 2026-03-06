@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+
+<html data-bs-theme="dark" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>j</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    </head>
+    <body>
+
+
+
+        <div class="container">
+
+            <div>
+                <div class="row m-2">
+
+                    <div class="col-md-4">
+                        <h2 class="fw-bold">Informacion del usuario: </h2>
+                        <div></div>
+
+
+                    </div>
+
+                </div>
+
+                <div class="border border-primary">
+
+                    <div class="row m-2 border border-primary">
+
+                        <div class="col-md-4">
+                            <h3 class="fw-bold">Busqueda libre</h3>
+                        </div>
+
+                    </div>
+
+                    <div class="row m-2 border border-primary">
+
+                        <form method="post" th:action="@{/usuario}" th:object="${usuariobusqueda}">
+                            <div class="row m-4">
+                                <div class="col-md-3">
+                                    <!--<input type="hidden" th:field="*{IdUsuario}" />-->
+                                    <input id="NombreUsuario" class="form-control" placeholder="Nombre" th:field="*{nombre}" >
+                                </div>
+                                <div class="col-md-3">
+                                    <input id="ApellidoPaternoUsuario" class="form-control" placeholder="Apellido Paterno" th:field="*{ApellidoPaterno}" >
+                                </div>
+                                <div class="col-md-3">
+                                    <input id="ApellidoMaternoUsuario" class="form-control" placeholder="Apellido Materno" th:field="*{ApellidoMaterno}" >
+                                </div>
+                                <div class="col-md-2">
+                                    <select class="form-select" th:field="*{Rol.IdRol}">
+                                        <option value="0"  >Selecciona tu rol</option>
+                                        <option th:each="rol : ${roles}" th:value = "${rol.IdRol}" th:text = "${rol.NombreRol}" ></option>                
+                                    </select>
+                                </div>
+
+                                <div class="col-md-1">
+                                    <button type="submit" class="btn btn-success"><i class="bi bi-search"></i></button>
+                                </div>
+                            </div>
+                        </form>
+
+                    </div>
+                </div>
+
+                <div class="row m-2">
+
+                    <div class="col-md-9">
+                        <p>Para agregar un usuario presionar el boton</p>
+                    </div>
+
+                    <div class="col-md-3" >
+                        <br/>
+                        <!--th:attr="data-target='#modal-toTrash'+${usuario.IdUsuario}"-->
+                        <a th:href="@{/usuario/form}" class="btn btn-primary">Agregar nuevo usuario</a>
+
+                        <br/>
+                    </div>
+
+                </div>
+            </div>
+
+
+
+
+            <div class="cl-sm table-responsive">
+
+                <table class="table table-striped border border-primary">
+                    <thead>
+                        <tr class="text-start">
+                            <th>Datos personales</th>
+                            <th>Info de contacto</th>
+                            <th>Direccion</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-start">
+
+
+                        <tr th:each="usuario : ${usuarios}">
+
+
+                            <td>
+                                <span style="white-space: pre-line;" th:text="|Nombre: ${usuario.nombre} ${usuario.apellidoPaterno}  ${usuario.ApellidoMaterno}
+                                      FechaNacimiento: ${usuario.FechaNacimiento}
+                                      Sexo: ${usuario.Sexo}|"></span>
+                                <br>
+                                <img th:src="@{'data:image/png;base64,' + ${usuario.imagen}}" alt="Imagen" style="width: 100px"  onerror="this.onerror=null; this.outerHTML='<a href=\'https://m.media-amazon.com/images/I/61yF9ssd-3L._AC_UF894,1000_QL80_.jpg\'>Imagen no disponible</a>';"/>
+                            </td>
+
+                            <td th:each="rol : ${usuario.rol}"  style="white-space: pre-line;" th:text="|Email: ${usuario.email} 
+                                Telefono: ${usuario.telefono} 
+                                Celular: ${usuario.celular}
+                                Nombre de usuario: ${usuario.username}
+                                Rol: ${rol.NombreRol}|">
+                            </td>
+                            <td> 
+                    <li style="white-space: pre-line;" th:each="direccion : ${usuario.Direcciones}" th:text="|Colonia: ${direccion.colonia.nombre}
+                        Calle: ${direccion.Calle}   
+                        Numero ext: ${direccion.NumeroExterior}|">
+                    </li>
+                    </td>
+
+                    <td> 
+                        <a th:href="@{/usuario/details/{IdUsuario}(IdUsuario=${usuario.IdUsuario})}" class="btn btn-warning"><i class="bi bi-pencil-square"></i></a>
+                        <a th:href="@{/usuario/delete/{IdUsuario}(IdUsuario=${usuario.IdUsuario})}" class="btn btn-danger"><i class="bi bi-trash-fill"></i></a>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input switch-estatus" 
+                                   type="checkbox" 
+                                   role="switch" 
+                                   th:id="'switch' + ${usuario.IdUsuario}" 
+                                   th:checked="${usuario.estatus == 1}"
+                                   th:data-id="${usuario.IdUsuario}">
+                            <label class="form-check-label" for="flexSwitchCheckDefault">estatus</label>
+                        </div>
+
+                    </td>
+                    </tr>
+
+                    </tbody>
+                </table>
+
+
+
+            </div>
+
+        </div>
+    </body>
+
+
+
+    <script th:if= "${mensaje != null}"  th:inline="javascript">
+        Swal.fire({
+            title: "¿Seguro de eliminar?",
+            text: "No vas a poder devolver este usuario",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, delete it!"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                Swal.fire({
+                    title: "Borrado",
+                    text: "EL usuario a sido borrado",
+                    icon: "success"
+                });
+            }
+        });
+    </script>
+
+    <script>
+
+        function AbrirModal(idUsuario) {
+
+            $.ajax({
+                url: "/usuario/GetById/" + idUsuario,
+                type: 'GET',
+                dataType: 'json',
+                success: function (data, textStatus, jqXHR) {
+
+                    var id = idUsuario;
+                    if (data) {
+                        let usuario = data.object;
+                        $("#NombreUsuario").val(data.object.Nombre);
+                        $("#ApellidoPaternoUsuario").val(usuario.ApellidoPaterno);
+                        $("#ApellidoMaternoUsuario").val(usuario.ApellidoMaterno)
+
+                        var fechaObj = new Date(usuario.FechaNacimiento);
+                        var año = fechaObj.getFullYear();
+                        var mes = ("0" + (fechaObj.getMonth() + 1)).slice(-2); // Añadir cero inicial
+                        var dia = ("0" + fechaObj.getDate()).slice(-2); // Añadir cero inicial
+                        var fechaFormateada = año + "-" + mes + "-" + dia;
+
+
+                        $("#FechaNacimiento").val(fechaFormateada)
+                        $("#Telefono").val(usuario.Telefono)
+                        $("#Celular").val(usuario.Celular)
+                        $("#Email").val(usuario.Email)
+                        $("#Username").val(usuario.Username)
+                        $("#Password").val(usuario.Password)
+
+                        if (usuario.Sexo == 'Ma') {
+                            $("#flexRadioDefault1").prop("checked", true)
+                        } else {
+                            $("#flexRadioDefault2").prop("checked", true)
+                        }
+
+                        $("#Curp").val(usuario.Curp)
+
+//                      PRUEBS PARA IMAGEN                        
+                        // 1.  cadena Base64 
+                        const base64String = usuario.Imagen;
+                        const mimeType = "image/png"; // Ajusta según el tipo
+
+                        // 2. Convertir Base64 a Blob
+                        const byteCharacters = atob(base64String);
+                        const byteNumbers = new Array(byteCharacters.length);
+                        for (let i = 0; i < byteCharacters.length; i++) {
+                            byteNumbers[i] = byteCharacters.charCodeAt(i);
+                        }
+                        const byteArray = new Uint8Array(byteNumbers);
+                        const blob = new Blob([byteArray], {type: mimeType});
+
+                        // 3. Crear el objeto File
+                        const file = new File([blob], "imagen.png", {type: mimeType});
+
+                        // 4. Asignar el File al input type="file"
+                        const fileInput = document.querySelector('#imagenFile');
+                        const dataTransfer = new DataTransfer();
+                        dataTransfer.items.add(file);
+                        fileInput.files = dataTransfer.files;
+
+
+
+
+                        var myModal = new bootstrap.Modal(document.getElementById('Agregar'));
+                        myModal.show();
+
+
+                    } else {
+                        console.log("Eror en el modal GetById");
+                    }
+
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    alert("No se pudo procesar la tarea");
+                }
+            });
+        }
+    </script>
+
+    <script th:if="${successMesage}" th:inline="javascript">
+        Swal.fire({
+            title: "Exito",
+            text: [[${successMesage}]],
+            icon: "success"
+        });
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            $('.switch-estatus').on('change', function () {
+                const checkbox = $(this);
+                const idUsuario = checkbox.data('id'); // Obtiene el ID de th:data-id
+                const estatus = checkbox.is(':checked') ? 1 : 0;
+//                const label = checkbox.next('.form-check-label');
+                checkbox.prop('disabled', true);
+                console.log("ID: " + idUsuario + " Estatus: " + estatus);
+                $.ajax({
+                    type: "POST",
+                    url: "/usuario/updateEstatus/" + estatus + "/" + idUsuario,
+                    success: function (response) {
+                        if (response.correct) {
+
+                            console.log("Estatus actualizado con éxito");
+                        } else {
+                            alert("Error al actualizar: " + response.errorMessage);
+//                            checkbox.prop('checked', !checkbox.is(':checked'));
+                        }
+                    },
+                    error: function (e) {
+
+//                        checkbox.prop('checked', !checkbox.is(':checked'));
+                        
+                    },
+                    complete: function () {
+                        // Re-habilitamos 
+//                        checkbox.prop('disabled', false);
+                    }
+                });
+            });
+        });
+    </script>
+
+
+</html>

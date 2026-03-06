@@ -1,0 +1,740 @@
+
+<html data-bs-theme="dark" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>Detalles</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+    </head>
+    <body>
+
+
+        <div class="container">
+
+            <div>
+                <div class="row m-4">
+                    <div class="col-md-12">
+                        <h2>Detalles del usuario</h2>
+                    </div>
+                </div>
+            </div>
+
+
+
+
+            <div class="row" th:object="${usuario}">
+                <div class="col-sm-6 mb-3 mb-sm-0">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Detalles del usuario</h5>
+
+                            <div >
+                                <img th:src="@{'data:image/png;base64,' + ${usuario.Imagen}}" alt="Imagen" style="display: block; margin-left: auto; margin-right: auto; width: 50%; max-width: 300px;"  onerror="this.onerror=null; this.outerHTML='<a href=\'https://m.media-amazon.com/images/I/61yF9ssd-3L._AC_UF894,1000_QL80_.jpg\'>Imagen no disponible</a>';"/>
+                                <div class="card-body">
+                                    <div class="row m-4">
+                                        <div class="col-md-4">
+                                            <input id="NombreUsuario" class="form-control"  th:field="*{nombre}" >
+                                        </div>
+                                        <div class="col-md-4">
+                                            <input id="ApellidoPaternoUsuario" class="form-control" placeholder="Apellido Paterno" th:field="*{ApellidoPaterno}" >
+                                            <span class="text-danger" th:if="${#fields.hasErrors('ApellidoPaterno')}" th:errors = "*{ApellidoPaterno}"></span>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <input id="ApellidoMaternoUsuario" class="form-control" placeholder="Apellido Materno" th:field="*{ApellidoMaterno}" >
+                                            <span class="text-danger" th:if="${#fields.hasErrors('ApellidoMaterno')}" th:errors = "*{ApellidoMaterno}"></span>
+                                        </div>
+                                    </div>
+                                    <div class="row m-4">
+                                        <div class="col-md-4">
+                                            <input id="FechaNacimiento" type="date" class="form-control" placeholder="Calendario provisional" th:field="*{FechaNacimiento}" >
+                                            <span class="text-danger" th:if="${#fields.hasErrors('FechaNacimiento')}" th:errors = "*{FechaNacimiento}"></span>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <input id="Telefono"  class="form-control" placeholder="Telefono" maxlength="10" th:field="*{Telefono}">
+                                            <span class="text-danger" th:if="${#fields.hasErrors('Telefono')}" th:errors = "*{Telefono}"></span>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <input id="Celular"  class="form-control" placeholder="Celular" maxlength="10" th:field="*{Celular}">
+                                            <span class="text-danger" th:if="${#fields.hasErrors('Celular')}" th:errors = "*{Celular}"></span>
+                                        </div>
+                                    </div>
+                                    <div class="row m-4">
+                                        <div class="col-md-12">
+                                            <input id="Email"  class="form-control" placeholder="Email" th:field="*{Email}">
+                                            <span class="text-danger" th:if="${#fields.hasErrors('Email')}" th:errors = "*{Email}"></span>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="row m-4">
+                                        <div class="col-md-12">
+                                            <input id="Username" class="form-control" placeholder="Nombre de usuario" th:field="*{Username}">
+                                            <span class="text-danger" th:if="${#fields.hasErrors('Username')}" th:errors = "*{Username}"></span>
+                                        </div>
+                                        <!--                                        <div class="col-md-6">
+                                                                                    <div >
+                                                                                        <input id="Password" type="password" class="form-control" placeholder="Contraseña" th:field="*{Password}">
+                                                                                    </div>
+                                                                                </div>-->
+
+                                    </div>
+
+                                    <div class="row m-4">
+                                        <div class="col-md-12">
+                                            <div >
+                                                <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" value="Ma" th:field="*{Sexo}">
+                                                <label class="form-check-label" for="flexRadioDefault1">Hombre</label>
+
+                                                <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" value="Fe" th:field="*{Sexo}">
+                                                <label class="form-check-label" for="flexRadioDefault2">Mujer</label>
+
+                                            </div>
+                                            <span class="text-danger" th:if="${#fields.hasErrors('Sexo')}" th:errors = "*{Sexo}"></span>
+                                        </div>
+                                    </div>
+
+                                    <div class="row m-4">
+                                        <div class="col-md-12">
+                                            <input id="Curp" class="form-control" placeholder="Curp" th:field="*{Curp}">
+                                            <span class="text-danger" th:if="${#fields.hasErrors('Curp')}" th:errors = "*{Curp}"></span>
+                                        </div>
+                                    </div>
+
+                                    <div class="row m-4">
+                                        <div class="col-md-12">
+                                            <select class="form-select" th:field="*{Rol.IdRol}">
+                                                <option value="0"  >Selecciona tu rol</option>
+                                                <option th:each="rol : ${roles}" th:value = "${rol.IdRol}" th:text = "${rol.NombreRol}" ></option>                
+                                            </select>
+                                            <span class="text-danger" th:if="${#fields.hasErrors('Rol.IdRol')}" th:errors = "*{Rol.IdRol}"></span>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="row m-4" >
+                                <div class="col-md-4" style="display: flex; justify-content: center;">
+                                    <button type="button" th:onclick="|AbrirModal('${usuario.idUsuario}')|"  class="btn btn-warning" >Usuario</button>
+                                </div>
+                                <div class="col-md-4" style="display: flex; justify-content: center;">
+                                    <button type="button" class="btn btn-warning" >Imagen</button>
+                                </div>
+                                <div class="col-md-4" style="display: flex; justify-content: center;">
+                                    <button type="button" class="btn btn-warning" >Contraseña</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row mb-3">
+                                <h5 class="card-title col-md-6">Direcciones Registradas</h5>
+                                <button type="button" class="btn btn-primary col-md-4" th:onclick="AbrirModalAddDireccion()"><i class="bi bi-house-add"></i> Agregar</button>
+                            </div>
+                            <div class="row border-bottom mb-3 pb-2" th:each="direccion : ${usuario.Direcciones}">
+                                <div class="col-md-3">
+                                    <label class="small text-muted">Colonia</label>
+                                    <p th:text="${direccion.colonia.nombre}">Colonia</p>
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="small text-muted">CP</label>
+                                    <p th:text="${direccion.colonia.CodigoPostal}">00000</p>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="small text-muted">Calle y Números</label>
+                                    <p th:text="|${direccion.Calle} Ext: ${direccion.NumeroExterior} Int: ${direccion.NumeroInterior}|"></p>
+                                </div>
+                                <div class="col-md-1">
+                                    <form th:action="@{/usuario/delete/{IdUsuario}/{IdDireccion}(IdUsuario=${usuario.IdUsuario}, IdDireccion=${direccion.IdDireccion})}" method="post">
+                                        <button type="submit" class="btn btn-danger" onclick="return confirm('¿Estás seguro de eliminar esta dirección?')">
+                                            <i class="bi bi-trash"></i> 
+                                        </button>
+                                    </form>
+                                    <button type="button" class="btn btn-warning" 
+                                            th:onclick="|AbrirModalEditar('${direccion.IdDireccion}', '${usuario.IdUsuario}')|">
+                                        <i class="bi bi-pencil-square"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+        </div>
+
+    </body>
+<!--    method="post" th:action="@{/usuario/update/{IdUsuario}(IdUsuario=${usuario.IdUsuario})}" th:object="${usuario}" termina de implemntar el updateImagen-->
+        <form  enctype="multipart/form-data">
+        <div class="modal fade" id="Agregarimagen" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true" >
+            <div class="modal-dialog  modal-xl">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="staticBackdropLabel">Detalles de Usuario</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body" >
+                        <div>
+
+                            <div class="row m-4">
+                                <div class="col-md-4 text-center d-flex flex-column align-items-center">
+                                    <div class="card p-3 w-100 h-100">
+                                        <label class="form-label fw-bold">Imagen</label>
+                                        <input type="file" class="form-control mb-2" name="imagenFile" id="imagenFile"  >
+                                        <img id="previewImage" style="max-width: 300px; max-height: auto" class="mx-auto" src="#"/>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Actualizar imagen</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+    
+    
+    <form method="post" th:action="@{/usuario/update/{IdUsuario}(IdUsuario=${usuario.IdUsuario})}" th:object="${usuario}" enctype="multipart/form-data">
+        <div class="modal fade" id="Agregar" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true" >
+            <div class="modal-dialog  modal-xl">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="staticBackdropLabel">Detalles de Usuario</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body" >
+                        <div>
+                            <div class="row m-4">
+                                <div class="col-md-4">
+                                    <input type="hidden" th:field="*{IdUsuario}" />
+                                    <input id="NombreUsuario" class="form-control"  th:field="*{nombre}" >
+                                </div>
+                                <div class="col-md-4">
+                                    <input id="ApellidoPaternoUsuario" class="form-control" placeholder="Apellido Paterno" th:field="*{ApellidoPaterno}" >
+                                    <span class="text-danger" th:if="${#fields.hasErrors('ApellidoPaterno')}" th:errors = "*{ApellidoPaterno}"></span>
+                                </div>
+                                <div class="col-md-4">
+                                    <input id="ApellidoMaternoUsuario" class="form-control" placeholder="Apellido Materno" th:field="*{ApellidoMaterno}" >
+                                    <span class="text-danger" th:if="${#fields.hasErrors('ApellidoMaterno')}" th:errors = "*{ApellidoMaterno}"></span>
+                                </div>
+                            </div>
+                            <div class="row m-4">
+                                <div class="col-md-12">
+                                    <input id="FechaNacimiento" type="date" class="form-control" placeholder="Calendario provisional" th:field="*{FechaNacimiento}" >
+                                    <span class="text-danger" th:if="${#fields.hasErrors('FechaNacimiento')}" th:errors = "*{FechaNacimiento}"></span>
+                                </div>
+                            </div>
+                            <div class="row m-4">
+                                <div class="col-md-6">
+                                    <input id="Telefono"  class="form-control" placeholder="Telefono" maxlength="10" th:field="*{Telefono}">
+                                    <span class="text-danger" th:if="${#fields.hasErrors('Telefono')}" th:errors = "*{Telefono}"></span>
+                                </div>
+                                <div class="col-md-6">
+                                    <input id="Celular"  class="form-control" placeholder="Celular" maxlength="10" th:field="*{Celular}">
+                                    <span class="text-danger" th:if="${#fields.hasErrors('Celular')}" th:errors = "*{Celular}"></span>
+                                </div>
+                            </div>
+                            <div class="row m-4">
+                                <div class="col-md-4">
+                                    <input id="Email"  class="form-control" placeholder="Email" th:field="*{Email}">
+                                    <span class="text-danger" th:if="${#fields.hasErrors('Email')}" th:errors = "*{Email}"></span>
+                                </div>
+                                <div class="col-md-4">
+                                    <input id="Username" class="form-control" placeholder="Nombre de usuario" th:field="*{Username}">
+                                    <span class="text-danger" th:if="${#fields.hasErrors('Username')}" th:errors = "*{Username}"></span>
+                                </div>
+                                <div class="col-md-4">
+                                    <div >
+                                        <input id="Password" type="password" class="form-control" placeholder="Contraseña" th:field="*{Password}">
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="row m-4">
+                                <div class="col-md-12">
+                                    <div >
+                                        <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" value="Ma" th:field="*{Sexo}">
+                                        <label class="form-check-label" for="flexRadioDefault1">Hombre</label>
+
+                                        <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" value="Fe" th:field="*{Sexo}">
+                                        <label class="form-check-label" for="flexRadioDefault2">Mujer</label>
+
+                                    </div>
+                                    <span class="text-danger" th:if="${#fields.hasErrors('Sexo')}" th:errors = "*{Sexo}"></span>
+                                </div>
+                            </div>
+
+                            <div class="row m-4">
+                                <div class="col-md-8">
+                                    <input id="Curp" class="form-control" placeholder="Curp" th:field="*{Curp}">
+                                    <span class="text-danger" th:if="${#fields.hasErrors('Curp')}" th:errors = "*{Curp}"></span>
+                                </div>
+                                <div class="col-md-4">
+                                    <select class="form-select" th:field="*{Rol.IdRol}">
+                                        <option value="0"  >Selecciona tu rol</option>
+                                        <option th:each="rol : ${roles}" th:value = "${rol.IdRol}" th:text = "${rol.NombreRol}" ></option>                
+                                    </select>
+                                    <span class="text-danger" th:if="${#fields.hasErrors('Rol.IdRol')}" th:errors = "*{Rol.IdRol}"></span>
+                                </div>
+
+
+                            </div>
+<!--                            <div class="row m-4">
+                                <div class="col-md-4 text-center d-flex flex-column align-items-center">
+                                    <div class="card p-3 w-100 h-100">
+                                        <label class="form-label fw-bold">Imagen</label>
+                                        <input type="file" class="form-control mb-2" name="imagenFile" id="imagenFile"  >
+                                        <img id="previewImage" style="max-width: 300px; max-height: auto" class="mx-auto" src="#"/>
+                                    </div>
+                                </div>
+                            </div>-->
+
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Actualizar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <form id="actualizarDireccion" method="post" th:action="@{/usuario/update/{IdDireccion}/{IdUsuario}(IdDireccion=${direccion.IdDireccion}, IdUsuario=${usuario.IdUsuario})}" th:object="${direccion}">
+        <div class="modal fade" id="formUpdate" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true" >
+            <div class="modal-dialog  modal-xl">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="staticBackdropLabel">Editar Direccion</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body" >
+                        <div>
+                            <div class="row m-4">
+                                <div class="col-md-3">
+                                    <select id="ddlpais" class="form-select" th:field="*{colonia.municipio.estado.pais.IdPais}">
+                                        <option value= 0 selected> selecciona tu pais</option>
+                                        <option th:each = "pais : ${paises}" th:value =" ${pais.IdPais}" th:text = "${pais.Nombre}"></option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <select id="ddlestado" class="form-select" th:field = "*{colonia.municipio.estado.IdEstado}">
+                                        <option  value="0" selected> selecciona tu Estado</option>
+                                        <option th:each = "estado : ${estados}" th:value =" ${estado.IdEstado}" th:text = "${estado.Nombre}"></option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <select id="ddlmunicipio" class="form-select" th:field = "*{colonia.municipio.IdMunicipio}">
+                                        <option  value="0" selected> selecciona tu Municipio</option>
+                                        <option th:each = "municipio : ${municipios}" th:value =" ${municipio.IdMunicipio}" th:text = "${municipio.Nombre}"></option>                                
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <select id="ddlcolonia" class="form-select" th:field = "*{colonia.IdColonia}">
+                                        <option  value="0"  data-cp-id selected> selecciona tu Colonia</option>
+                                        <option th:each = "colonia : ${colonias}" th:value =" ${colonia.IdColonia}" th:text = "${colonia.Nombre}"></option>                                
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="row m-4">
+                                <div class="col-md-2">
+                                    <input id="codigopostal" class="form-control" placeholder="Codigo Postal" th:field = "*{colonia.CodigoPostal}" >
+                                </div>
+                                <div class="col-md-2">                                                          
+                                    <input id="calle" class="form-control" placeholder="Calle" th:field = "*{Calle}">
+
+                                </div>
+
+                                <div class="col-md-2">                                                          
+                                    <input id="numexterior" class="form-control" placeholder="numexterior" th:field = "*{NumeroExterior}">
+
+                                </div>
+
+                                <div class="col-md-2">                                                          
+                                    <input id="numinterior" class="form-control" placeholder="numinterior" th:field = "*{NumeroInterior}">
+
+                                </div>
+                            </div>
+                            <input type="hidden" th:field="*{IdDireccion}" id="idDireccionModal" />
+                            <input type="hidden" name="IdUsuario" th:value="${usuario.IdUsuario}" />
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Actualizar direccion</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <form  method="post" th:action="@{/usuario/addDireccion}" th:object="${direccion}">
+        <div class="modal fade" id="AgregarDireccion" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true" >
+            <div class="modal-dialog  modal-xl">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="staticBackdropLabel">Agregar Direccion</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body" >
+
+                        <div>
+                            <div class="row m-4">
+                                <div class="col-md-3">
+                                    <select id="ddlpais" class="form-select" th:field="*{colonia.municipio.estado.pais.IdPais}">
+                                        <option value= 0 selected> seleccina tu pais</option>
+                                        <option th:each = "pais : ${paises}" th:value =" ${pais.IdPais}" th:text = "${pais.Nombre}"></option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <select id="ddlestado" class="form-select" th:field = "*{colonia.municipio.estado.IdEstado}">
+                                        <option  value="0" selected> selecciona tu Estado</option>
+                                        <option th:each = "estado : ${estados}" th:value =" ${estado.IdEstado}" th:text = "${estado.Nombre}"></option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <select id="ddlmunicipio" class="form-select" th:field = "*{colonia.municipio.IdMunicipio}">
+                                        <option  value="0" selected> selecciona tu Municipio</option>
+                                        <option th:each = "municipio : ${municipios}" th:value =" ${municipio.IdMunicipio}" th:text = "${municipio.Nombre}"></option>                                
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <select id="ddlcolonia" class="form-select" th:field = "*{colonia.IdColonia}">
+                                        <option  value="0"  data-cp-id selected> selecciona tu Colonia</option>
+                                        <option th:each = "colonia : ${colonias}" th:value =" ${colonia.IdColonia}" th:text = "${colonia.Nombre}"></option>                                
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="row m-4">
+                                <div class="col-md-2">
+                                    <input id="codigopostal" class="form-control" placeholder="Codigo Postal">
+                                </div>
+                                <div class="col-md-2">                                                          
+                                    <input id="calle" class="form-control" placeholder="Calle" th:field = "*{Calle}">
+
+                                </div>
+
+                                <div class="col-md-2">                                                          
+                                    <input id="numexterior" class="form-control" placeholder="numexterior" th:field = "*{NumeroExterior}">
+
+                                </div>
+
+                                <div class="col-md-2">                                                          
+                                    <input id="numinterior" class="form-control" placeholder="numinterior" th:field = "*{NumeroInterior}">
+
+                                </div>
+                            </div>
+
+                            <input type="hidden" name="idUsuarioRelacion" th:value="${usuario.IdUsuario}" />
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Agregar direccion</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <script>
+
+        function AbrirModal(idUsuario) {
+
+            $.ajax({
+                url: "/usuario/GetById/" + idUsuario,
+                type: 'GET',
+                dataType: 'json',
+                success: function (data, textStatus, jqXHR) {
+
+                    var id = idUsuario;
+                    if (data) {
+                        let usuario = data.object;
+                        $("#NombreUsuario").val(data.object.Nombre);
+                        $("#ApellidoPaternoUsuario").val(usuario.ApellidoPaterno);
+                        $("#ApellidoMaternoUsuario").val(usuario.ApellidoMaterno)
+
+                        var fechaObj = new Date(usuario.FechaNacimiento);
+                        var año = fechaObj.getFullYear();
+                        var mes = ("0" + (fechaObj.getMonth() + 1)).slice(-2); // Añadir cero inicial
+                        var dia = ("0" + fechaObj.getDate()).slice(-2); // Añadir cero inicial
+                        var fechaFormateada = año + "-" + mes + "-" + dia;
+
+
+                        $("#FechaNacimiento").val(fechaFormateada);
+                        $("#Telefono").val(usuario.Telefono);
+                        $("#Celular").val(usuario.Celular);
+                        $("#Email").val(usuario.Email);
+                        $("#Username").val(usuario.Username);
+                        $("#Password").val(usuario.Password);
+
+                        if (usuario.Sexo == 'Ma') {
+                            $("#flexRadioDefault1").prop("checked", true);
+                        } else {
+                            $("#flexRadioDefault2").prop("checked", true);
+                        }
+
+                        $("#Curp").val(usuario.Curp);
+
+                        var myModal = new bootstrap.Modal(document.getElementById('Agregar'));
+                        myModal.show();
+
+
+                    } else {
+                        console.log("Eror en el modal GetById");
+                    }
+
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    alert("No se pudo procesar la tarea, modal");
+                }
+            });
+        }
+    </script>
+
+    <script>
+        function AbrirModalAddDireccion() {
+            console.log("Abriendo modal...");
+            var modalElement = document.getElementById('AgregarDireccion');
+            if (modalElement) {
+
+                var myModal = new bootstrap.Modal(modalElement);
+                myModal.show();
+            } else {
+                console.error("No se encontró el modal con ID AgregarDireccion");
+            }
+        }
+    </script>
+
+    <script>
+
+        var modalEditar;
+
+        $(document).ready(function () {
+            
+            modalEditar = new bootstrap.Modal(document.getElementById('formUpdate'));
+        });
+
+        function AbrirModalEditar(idDireccion, idUsuario) {
+            $.ajax({
+                url: "/usuario/GetByIdDireccion/" + idDireccion,
+                type: 'GET',
+                dataType: 'json',
+                success: function (result) {
+                    if (result.correct) {
+//                        console.log("Objeto completo recibido:", result.object);
+                        var direccion = result.object;
+
+                        console.log(direccion.IdDireccion);
+                        console.log(idDireccion);
+                        $("#calle").val(direccion.Calle);
+                        $("#numexterior").val(direccion.NumeroExterior);
+                        $("#numinterior").val(direccion.NumeroInterior);
+                        $("#codigopostal").val(direccion.colonia.CodigoPostal);
+
+                        var idPais = direccion.colonia.municipio.estado.pais.IdPais;
+
+                        if (idPais) {
+                            $("#ddlpais").val(idPais).trigger('change');
+
+                            setTimeout(function () {
+                                var idEstado = direccion.colonia.municipio.estado.IdEstado;
+                                if (idEstado) {
+                                    $("#ddlestado").val(idEstado).trigger('change');
+
+                                    setTimeout(function () {
+                                        var idMun = direccion.colonia.municipio.IdMunicipio;
+                                        if (idMun) {
+                                            $("#ddlmunicipio").val(idMun).trigger('change');
+
+                                            setTimeout(function () {
+                                                $("#ddlcolonia").val(direccion.colonia.IdColonia);
+                                            }, 300);
+                                        }
+                                    }, 300);
+                                }
+                            }, 300);
+                        }
+
+                        $("#actualizarDireccion").attr("action", "/usuario/update/" + idDireccion + "/" + idUsuario);
+
+                        modalEditar.show();
+
+                    } else {
+                        alert("Error: " + result.errorMessage);
+                    }
+                },
+                error: function (jqXHR) {
+                    console.table(jqXHR);
+                    alert("Error en la petición al servidor");
+                }
+            });
+        }
+    </script>
+
+    <script>
+
+        const input = document.getElementById('imagenFile');
+        const preview = document.getElementById('previewImage');
+
+        input.addEventListener('change', function () {
+            const file = this.files[0];
+            if (file) {
+                // Crea una URL temporal del archivo seleccionado
+                const reader = new FileReader();
+
+                reader.onload = function (e) {
+                    preview.src = e.target.result;
+                    preview.style.display = 'block'; // Muestra la imagen
+                }
+
+                reader.readAsDataURL(file); // Lee el archivo
+            }
+        });
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            console.log("Ya termina de cargar la  pagina");
+
+            $("#ddlpais").change(function () {
+                console.log("Ya cambie");
+                var IdPais = $("#ddlpais").val();
+                if (IdPais != 0 && IdPais != null && IdPais != "null") {
+                    $.ajax({
+                        url: "/usuario/getEstadosByPais/" + IdPais,
+                        type: 'GET',
+                        dataType: 'json',
+                        success: function (data, textStatus, jqXHR) {
+                            console.log("Todo ok");
+                            $("#ddlestado").empty();
+                            $("#ddlestado").append("<option value= 0 selected> selecciona tu estado</option>");
+                            $.each(data.objects, function (i, estado) {
+//                                console.log(estado.Nombre);
+                                $("#ddlestado").append("<option value=" + estado.IdEstado + ">" + estado.Nombre + "</option>");
+                            });
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+                            console.table(jqXHR);
+//                            alert("No se pudo procesar la tarea, pais");
+                        }
+                    });
+                } else {
+                    $("#ddlestado").empty();
+                    $("#ddlestado").append("<option value= 0 selected> selecciona tu estado</option>");
+
+                    $("#ddlmunicipio").empty();
+                    $("#ddlmunicipio").append("<option value= 0 selected> selecciona tu municipio</option>");
+
+                    $("#ddlcolonia").empty();
+                    $("#ddlcolonia").append("<option value= 0 selected> selecciona tu colonia</option>");
+
+                    $("#codigopostal").val("");
+
+                }
+
+
+            });
+
+
+
+            $("#ddlestado").change(function () {
+                console.log("Ya cambie, estado");
+                var IdEstado = $("#ddlestado").val();
+                if (IdEstado != 0) {
+                    $.ajax({
+                        url: "/usuario/getMunicipioByEstado/" + IdEstado,
+                        type: 'GET',
+                        dataType: 'json',
+                        success: function (data, textStatus, jqXHR) {
+                            console.log("Todo ok, estado");
+                            $("#ddlmunicipio").empty();
+                            $("#ddlmunicipio").append("<option value= 0 selected> selecciona tu municipio</option>");
+                            $.each(data.objects, function (i, municipio) {
+                                console.log(municipio.Nombre);
+                                $("#ddlmunicipio").append("<option value=" + municipio.IdMunicipio + ">" + municipio.Nombre + "</option>");
+                            });
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+                            console.table(jqXHR);
+//                            alert("No se pudo procesar la tarea, estado");
+                        }
+                    });
+                } else {
+                    $("#ddlmunicipio").empty();
+                    $("#ddlmunicipio").append("<option value= 0 selected> selecciona tu municipio</option>");
+
+                    $("#ddlcolonia").empty();
+                    $("#ddlcolonia").append("<option value= 0 selected> selecciona tu colonia</option>");
+
+                    $("#codigopostal").val("");
+                }
+
+
+            });
+
+
+
+
+
+            $("#ddlmunicipio").change(function () {
+                console.log("Ya cambie, municipio");
+                var IdMunicipio = $("#ddlmunicipio").val();
+                if (IdMunicipio != 0) {
+                    $.ajax({
+                        url: "/usuario/getColoniaByMunicipio/" + IdMunicipio,
+                        type: 'GET',
+                        dataType: 'json',
+                        success: function (data, textStatus, jqXHR) {
+                            console.log("Todo ok, municipio");
+                            $("#ddlcolonia").empty();
+                            $("#ddlcolonia").append("<option value= 0 selected> selecciona tu colonia</option>");
+                            $.each(data.objects, function (i, colonia) {
+//                                console.log(colonia.Nombre);
+//                                console.log(colonia.CodigoPostal);
+
+                                $("#ddlcolonia").append("<option value=" + colonia.IdColonia + " data-cp=" + colonia.CodigoPostal + ">" + colonia.Nombre + "</option>");
+
+//                                document.getElementById("#ddlcodigopostal").value(data - cp);
+//                                $("#ddlcodigopostal").append("<input >" + data - cp + "</input>");
+
+
+
+
+
+                            });
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+                            console.table(jqXHR);
+//                            alert("No se pudo procesar la tarea, municipio");
+                        }
+                    });
+                } else {
+                    $("#ddlcolonia").empty();
+                    $("#ddlcolonia").append("<option value= 0 selected> selecciona tu colonia</option>");
+                    $("#codigopostal").val("");
+                }
+
+
+            });
+
+
+            $("#ddlcolonia").change(function () {
+                $("#codigopostal").val($("#ddlcolonia option:selected").data("cp"));
+            });
+
+        });
+    </script>
+
+</html>
