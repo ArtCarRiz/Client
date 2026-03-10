@@ -349,7 +349,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                 var IdPais = $("#ddlpais").val();
                 if (IdPais != 0) {
                     $.ajax({
-                        url: "/usuario/getEstadosByPais/" + IdPais,
+                        url: "http://127.0.0.1:8080/api/usuario/Estado?identificador=" + IdPais,
                         type: 'GET',
                         dataType: 'json',
                         success: function (data, textStatus, jqXHR) {
@@ -389,7 +389,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                 var IdEstado = $("#ddlestado").val();
                 if (IdEstado != 0) {
                     $.ajax({
-                        url: "/usuario/getMunicipioByEstado/" + IdEstado,
+                        url: "http://127.0.0.1:8080/api/usuario/Municipio?identificador=" + IdEstado,
                         type: 'GET',
                         dataType: 'json',
                         success: function (data, textStatus, jqXHR) {
@@ -427,7 +427,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                 var IdMunicipio = $("#ddlmunicipio").val();
                 if (IdMunicipio != 0) {
                     $.ajax({
-                        url: "/usuario/getColoniaByMunicipio/" + IdMunicipio,
+                        url: "http://127.0.0.1:8080/api/usuario/Colonia?identificador=" + IdMunicipio,
                         type: 'GET',
                         dataType: 'json',
                         success: function (data, textStatus, jqXHR) {
