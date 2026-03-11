@@ -275,8 +275,8 @@
                 checkbox.prop('disabled', true);
                 console.log("ID: " + idUsuario + " Estatus: " + estatus);
                 $.ajax({
-                    type: "POST",
-                    url: "/usuario/updateEstatus/" + estatus + "/" + idUsuario,
+                    type: "PATCH",
+                    url: "http://localhost:8080/api/usuario/Estatus?identificador=" + idUsuario + "&estatus=" + estatus,
                     success: function (response) {
                         if (response.correct) {
 
