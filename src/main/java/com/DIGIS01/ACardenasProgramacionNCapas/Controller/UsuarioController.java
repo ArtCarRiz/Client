@@ -229,25 +229,25 @@ public class UsuarioController {
 
                 Result<Usuario> usuario = responseGetById.getBody();
 
-                int idPais = usuario.object.Direcciones.get(0).colonia.municipio.estado.pais.getIdPais();
-                int idEstado = usuario.object.Direcciones.get(0).colonia.municipio.estado.getIdEstado();
-                int idMunicipio = usuario.object.Direcciones.get(0).colonia.municipio.getIdMunicipio();
-                int idColonia = usuario.object.Direcciones.get(0).colonia.getIdColonia();
-
-                if (idEstado != 0) {
-                    //guardo el valor
-                    model.addAttribute("estados", restTemplate.getForObject(rutaBase + "/api/usuario/Estado/{identificador}}", List.class, idPais));
-                    if (idMunicipio != 0) {
-                        //guardo el valor
-                        model.addAttribute("municipios", restTemplate.getForObject(rutaBase + "/api/usuario/Municipio/{identificador}", List.class, idEstado));
-                        if (idColonia != 0) {
-                            //guardo el valor
-                            model.addAttribute("colonias", restTemplate.getForObject(rutaBase + "/api/usuario/Colonia/{identificador}", List.class, idMunicipio));
-
-                        }
-                    }
-
-                }
+//                int idPais = usuario.object.Direcciones.get(0).colonia.municipio.estado.pais.getIdPais();
+//                int idEstado = usuario.object.Direcciones.get(0).colonia.municipio.estado.getIdEstado();
+//                int idMunicipio = usuario.object.Direcciones.get(0).colonia.municipio.getIdMunicipio();
+//                int idColonia = usuario.object.Direcciones.get(0).colonia.getIdColonia();
+//
+//                if (idEstado != 0) {
+//                    //guardo el valor
+//                    model.addAttribute("estados", restTemplate.getForObject(rutaBase + "/api/usuario/Estado?identificador=" + idPais, List.class, idPais));
+//                    if (idMunicipio != 0) {
+//                        //guardo el valor
+//                        model.addAttribute("municipios", restTemplate.getForObject(rutaBase + "/api/usuario/Municipio?identificador=" + idEstado, List.class, idEstado));
+//                        if (idColonia != 0) {
+//                            //guardo el valor
+//                            model.addAttribute("colonias", restTemplate.getForObject(rutaBase + "/api/usuario/Colonia?identificador=" + idMunicipio, List.class, idMunicipio));
+//
+//                        }
+//                    }
+//
+//                }
             }
         } catch (Exception e) {
             System.out.println("Error en details: " + e.getLocalizedMessage());
@@ -275,17 +275,17 @@ public class UsuarioController {
                 Usuario usuarioanterior = (Usuario) result.object;
                 usuario.setImagen(usuarioanterior.getImagen());
             }
-            
+
             ResponseEntity<Result> responseUpdate = restTemplate.exchange(rutaBase + "/api/usuario",
                     HttpMethod.PUT,
-                     new HttpEntity<>(usuario),
+                    new HttpEntity<>(usuario),
                     new ParameterizedTypeReference<Result>() {
             });
-            
+
             result = responseUpdate.getBody();
-            
+
             if (!result.correct) {
-                 return "redirect:/usuario/details/" + identificador;
+                return "redirect:/usuario/details/" + identificador;
             }
 
         } catch (Exception e) {
@@ -296,37 +296,100 @@ public class UsuarioController {
 
         return "redirect:/usuario/details/" + identificador;
     }
-    
+
     @PostMapping("update/{IdDireccion}/{IdUsuario}")
-    public String UpdateDireccion (@ModelAttribute("direccion") Direccion direccion, @PathVariable("IdDireccion") int IdDireccion, @PathVariable("IdUsuario") int IdUsuario, RedirectAttributes redirectAttributes){
+    public String UpdateDireccion(@ModelAttribute("direccion") Direccion direccion, @PathVariable("IdDireccion") int IdDireccion, @PathVariable("IdUsuario") int IdUsuario, RedirectAttributes redirectAttributes) {
         Result result = new Result();
         RestTemplate restTemplate = new RestTemplate();
         direccion.setIdDireccion(IdDireccion);
         try {
-            
-            ResponseEntity<Result> responseUpdateDireccion = restTemplate.exchange(rutaBase + "/api/usuario/Direccion", 
+
+            ResponseEntity<Result> responseUpdateDireccion = restTemplate.exchange(rutaBase + "/api/usuario/Direccion",
                     HttpMethod.PUT,
                     new HttpEntity<>(direccion),
-                    new ParameterizedTypeReference<Result>() {});
-            
+                    new ParameterizedTypeReference<Result>() {
+            });
+
             result = responseUpdateDireccion.getBody();
-            
+
             if (result.correct) {
                 redirectAttributes.addFlashAttribute("mensaje", "Dirección actualizada correctamente");
-            }else{
+            } else {
                 redirectAttributes.addFlashAttribute("error", "Error al actualizar: " + result.errorMessage);
             }
-            
-            
+
         } catch (Exception e) {
             result.correct = false;
             result.errorMessage = e.getLocalizedMessage();
             result.ex = e;
         }
-        
-        
+
         return "redirect:/usuario/details/" + IdUsuario;
     }
 
+    @PostMapping("/addDireccion")
+    public String AddDireccion(@ModelAttribute("direccion") Direccion direccion, @RequestParam("idUsuarioRelacion") int idUsuario, RedirectAttributes redirectAttributes) {
+        Result result = new Result();
+        RestTemplate restTemplate = new RestTemplate();
+        try {
+
+            ResponseEntity<Result> responseAddDireccion = restTemplate.exchange(rutaBase + "/api/usuario/Direccion?identificador=" + idUsuario,
+                    HttpMethod.POST,
+                    new HttpEntity<>(direccion),
+                    Result.class);
+
+            if (result.correct) {
+                redirectAttributes.addFlashAttribute("mensaje", "Dirección agregada correctamente");
+            } else {
+                redirectAttributes.addFlashAttribute("error", "Error al agregar dirección: " + result.errorMessage);
+            }
+
+        } catch (Exception e) {
+            result.correct = false;
+            result.errorMessage = e.getLocalizedMessage();
+            result.ex = e;
+        }
+
+        return "redirect:/usuario/details/" + idUsuario;
+    }
+
+    @PostMapping("/updateImagen")
+    public String UpdateImagen(@RequestParam("idUsuario") int idUsuario, @RequestParam("imagenFile") MultipartFile imagen, RedirectAttributes redirectAttributes) {
+        Result result = new Result();
+        RestTemplate restTemplate = new RestTemplate();
+        try {
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+
+            MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
+            body.add("imagenFile", imagen.getResource());
+            
+            HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
+
+            ResponseEntity<Result> responseUpdateImagen = restTemplate.exchange(rutaBase + "/api/usuario/Imagen?identificador=" + idUsuario,
+                    HttpMethod.POST,
+                    requestEntity,
+                    Result.class);
+
+            if (responseUpdateImagen.getBody() != null && responseUpdateImagen.getBody().correct) {
+                redirectAttributes.addFlashAttribute("mensaje", "Imagen agregada correctamente");
+            } else {
+                redirectAttributes.addFlashAttribute("error", "Error al actualizar Imagen: " + result.errorMessage);
+            }
+
+        } catch (Exception e) {
+            result.correct = false;
+            result.errorMessage = e.getLocalizedMessage();
+            result.ex = e;
+        }
+        return "redirect:/usuario/details/" + idUsuario;
+    }
+
+    @GetMapping("/cargaMasiva")
+    public String CargaMasiva() {
+        return "cargaMasiva";
+    }
+    
+    
     
 }
