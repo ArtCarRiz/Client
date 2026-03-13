@@ -102,6 +102,16 @@ public class Usuario {
         this.Estatus = Estatus;
     }
 
+//    public int getStatus() {
+//        return Status;
+//    }
+//
+//    public void setStatus(int Status) {
+//        this.Status = Status;
+//    }
+
+    
+    
     public int getIdUsuario() {
         return IdUsuario;
     }
