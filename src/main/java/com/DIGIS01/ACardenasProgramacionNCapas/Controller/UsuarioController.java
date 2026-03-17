@@ -5,13 +5,16 @@
 package com.DIGIS01.ACardenasProgramacionNCapas.Controller;
 
 import com.DIGIS01.ACardenasProgramacionNCapas.ML.Direccion;
+import com.DIGIS01.ACardenasProgramacionNCapas.ML.ErroresArchivo;
 import com.DIGIS01.ACardenasProgramacionNCapas.ML.Pais;
 import com.DIGIS01.ACardenasProgramacionNCapas.ML.Result;
 import com.DIGIS01.ACardenasProgramacionNCapas.ML.Usuario;
+import jakarta.servlet.http.HttpSession;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -363,7 +366,7 @@ public class UsuarioController {
 
             MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
             body.add("imagenFile", imagen.getResource());
-            
+
             HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
 
             ResponseEntity<Result> responseUpdateImagen = restTemplate.exchange(rutaBase + "/api/usuario/Imagen?identificador=" + idUsuario,
@@ -389,7 +392,84 @@ public class UsuarioController {
     public String CargaMasiva() {
         return "cargaMasiva";
     }
-    
-    
-    
+
+    @PostMapping("/cargar")
+    public String CargaMasiva(@RequestParam("archivo") MultipartFile archivo, Model model, RedirectAttributes redirectAttributes, HttpSession session) {
+        Result result = new Result();
+        RestTemplate restTemplate = new RestTemplate();
+
+        try {
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+
+            ByteArrayResource fileResource = new ByteArrayResource(archivo.getBytes()) {
+                @Override
+                public String getFilename() {
+                    return archivo.getOriginalFilename();
+                }
+            };
+
+            MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
+            body.add("archivo", fileResource);
+
+            HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
+
+            ResponseEntity<Result> responseCargaMasiva = restTemplate.exchange(rutaBase + "/api/usuario/cargarArchivo",
+                    HttpMethod.POST,
+                    requestEntity,
+                    Result.class);
+
+            if (responseCargaMasiva.getBody() != null) {
+                Result resultR = responseCargaMasiva.getBody();
+
+                if (resultR.correct) {
+                    model.addAttribute("errores", false);
+                    String keyRecibida = (String) resultR.object;
+                    System.out.println("Key generada por el servicio: " + keyRecibida);
+                    session.setAttribute("keyArchivo", keyRecibida); //guardo la key en la session
+                } else {
+                    List<ErroresArchivo> errores = (List<ErroresArchivo>) resultR.objects;
+                    model.addAttribute("errores", errores);
+                    System.out.println("Se encontraron " + errores.size() + " errores.");
+                    model.addAttribute("funciono", true);
+                }
+
+            }
+
+        } catch (Exception e) {
+            result.correct = false;
+            result.errorMessage = e.getLocalizedMessage();
+            result.ex = e;
+        }
+
+        return "cargaMasiva";
+    }
+
+    @PostMapping("/cargaMasiva/procesar/{id}")
+    public String procesarCarga(@PathVariable("id") String id, RedirectAttributes redirectAttributes) {
+        RestTemplate restTemplate = new RestTemplate();
+        Result result = null;
+        try {
+
+            ResponseEntity<Result> responseProcesar = restTemplate.exchange(rutaBase + "/api/usuario/cargaMasiva/procesar?key=" + id,
+                    HttpMethod.POST,
+                    null,
+                    Result.class);
+            
+            result = responseProcesar.getBody();
+            if (result.correct) {
+                redirectAttributes.addFlashAttribute("successMesage", "Carga masiva exitosa.");
+            } else {
+                redirectAttributes.addFlashAttribute("error", "Error: " + result.errorMessage);
+            }
+
+        } catch (Exception e) {
+            result.correct = false;
+            result.errorMessage = e.getLocalizedMessage();
+            result.ex = e;
+        }
+
+        return "redirect:/usuario";
+    }
+
 }
