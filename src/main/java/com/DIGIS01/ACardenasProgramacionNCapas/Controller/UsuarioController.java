@@ -51,13 +51,20 @@ public class UsuarioController {
     private static String rutaBase = "http://localhost:8080";
 
     @GetMapping
-    public String Index(Model model) {
+    public String Index(Model model, HttpSession session) {
 
         RestTemplate restTemplate = new RestTemplate();
+        
+        String token = (String) session.getAttribute("token");
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", "Bearer " + token);
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        //entidad de la peticion
+        HttpEntity<Void> entity = new HttpEntity<>(headers);
 
         ResponseEntity<Result<Usuario>> responseEntity = restTemplate.exchange(rutaBase + "/api/usuario",
                 HttpMethod.GET,
-                HttpEntity.EMPTY,
+                entity,
                 new ParameterizedTypeReference<Result<Usuario>>() {
         });
 
