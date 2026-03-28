@@ -686,8 +686,11 @@
                 var IdPais = $(this).val();
                 if (IdPais != 0 && IdPais != null && IdPais != "null") {
                     $.ajax({
-                        url: "http://127.0.0.1:8080/api/usuario/Estado?identificador=" + IdPais,
+                        url: "http://127.0.0.1:8080/api/estado?identificador=" + IdPais,
                         type: 'GET',
+                        xhrFields: {
+                            withCredentials: true // Esto permite enviar la cookie HttpOnly
+                        },
                         dataType: 'json',
                         success: function (data) {
                             $("#" + idE).empty().append("<option value=0>selecciona tu estado</option>");
@@ -706,7 +709,7 @@
                 var IdEstado = $(this).val();
                 if (IdEstado != 0) {
                     $.ajax({
-                        url: "http://127.0.0.1:8080/api/usuario/Municipio?identificador=" + IdEstado,
+                        url: "http://127.0.0.1:8080/api/municipio?identificador=" + IdEstado,
                         type: 'GET',
                         dataType: 'json',
                         success: function (data) {
@@ -726,7 +729,7 @@
                 var IdMunicipio = $(this).val();
                 if (IdMunicipio != 0) {
                     $.ajax({
-                        url: "http://127.0.0.1:8080/api/usuario/Colonia?identificador=" + IdMunicipio,
+                        url: "http://127.0.0.1:8080/api/colonia?identificador=" + IdMunicipio,
                         type: 'GET',
                         dataType: 'json',
                         success: function (data) {

@@ -42,30 +42,30 @@
 
                     <div class="row m-2 border border-primary">
 
-<!--                        <form method="post" th:action="@{/usuario}" th:object="${usuariobusqueda}">
-                            <div class="row m-4">
-                                <div class="col-md-3">
-                                    <input type="hidden" th:field="*{IdUsuario}" />
-                                    <input id="NombreUsuario" class="form-control" placeholder="Nombre" th:field="*{nombre}" >
-                                </div>
-                                <div class="col-md-3">
-                                    <input id="ApellidoPaternoUsuario" class="form-control" placeholder="Apellido Paterno" th:field="*{ApellidoPaterno}" >
-                                </div>
-                                <div class="col-md-3">
-                                    <input id="ApellidoMaternoUsuario" class="form-control" placeholder="Apellido Materno" th:field="*{ApellidoMaterno}" >
-                                </div>
-                                <div class="col-md-2">
-                                    <select class="form-select" th:field="*{Rol.IdRol}">
-                                        <option value="0"  >Selecciona tu rol</option>
-                                        <option th:each="rol : ${roles}" th:value = "${rol.IdRol}" th:text = "${rol.NombreRol}" ></option>                
-                                    </select>
-                                </div>
-
-                                <div class="col-md-1">
-                                    <button type="submit" class="btn btn-success"><i class="bi bi-search"></i></button>
-                                </div>
-                            </div>
-                        </form>-->
+                        <!--                        <form method="post" th:action="@{/usuario}" th:object="${usuariobusqueda}">
+                                                    <div class="row m-4">
+                                                        <div class="col-md-3">
+                                                            <input type="hidden" th:field="*{IdUsuario}" />
+                                                            <input id="NombreUsuario" class="form-control" placeholder="Nombre" th:field="*{nombre}" >
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                            <input id="ApellidoPaternoUsuario" class="form-control" placeholder="Apellido Paterno" th:field="*{ApellidoPaterno}" >
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                            <input id="ApellidoMaternoUsuario" class="form-control" placeholder="Apellido Materno" th:field="*{ApellidoMaterno}" >
+                                                        </div>
+                                                        <div class="col-md-2">
+                                                            <select class="form-select" th:field="*{Rol.IdRol}">
+                                                                <option value="0"  >Selecciona tu rol</option>
+                                                                <option th:each="rol : ${roles}" th:value = "${rol.IdRol}" th:text = "${rol.NombreRol}" ></option>                
+                                                            </select>
+                                                        </div>
+                        
+                                                        <div class="col-md-1">
+                                                            <button type="submit" class="btn btn-success"><i class="bi bi-search"></i></button>
+                                                        </div>
+                                                    </div>
+                                                </form>-->
 
                     </div>
                 </div>
@@ -276,6 +276,9 @@
                 console.log("ID: " + idUsuario + " Estatus: " + estatus);
                 $.ajax({
                     type: "PATCH",
+                    xhrFields: {
+                        withCredentials: true // Esto permite enviar la cookie HttpOnly
+                    },
                     url: "http://localhost:8080/api/usuario/Estatus?identificador=" + idUsuario + "&estatus=" + estatus,
                     success: function (response) {
                         if (response.correct) {
@@ -289,7 +292,7 @@
                     error: function (e) {
 
 //                        checkbox.prop('checked', !checkbox.is(':checked'));
-                        
+
                     },
                     complete: function () {
                         // Re-habilitamos 

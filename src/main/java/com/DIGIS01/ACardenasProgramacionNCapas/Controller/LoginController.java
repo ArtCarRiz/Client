@@ -73,7 +73,7 @@ public class LoginController {
                 
                 String token = (String) resultR.object;
                 session.setAttribute("token", token);
-
+                String rolLogeado = resultR.errorMessage;
                 if (resultR.correct) {
                     return "redirect:/usuario";
                 }

@@ -9,6 +9,8 @@ import com.DIGIS01.ACardenasProgramacionNCapas.ML.ErroresArchivo;
 import com.DIGIS01.ACardenasProgramacionNCapas.ML.Pais;
 import com.DIGIS01.ACardenasProgramacionNCapas.ML.Result;
 import com.DIGIS01.ACardenasProgramacionNCapas.ML.Usuario;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -19,6 +21,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.ui.Model;
@@ -30,6 +33,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -50,11 +54,40 @@ public class UsuarioController {
 //    private static String rutaBase = "http://127.0.0.1:8080";
     private static String rutaBase = "http://localhost:8080";
 
+    public HttpEntity<Void> Cabecera(HttpSession session) {
+        String token = (String) session.getAttribute("token");
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", "Bearer " + token);
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        //entidad de la peticion
+        HttpEntity<Void> entity;
+        entity = new HttpEntity<>(headers);
+        return entity;
+    }
+
+    @GetMapping("/set-cookie")
+    public String setCookie(HttpServletResponse response, HttpSession session) {
+        // 1. Crear la cookie
+        String token = (String) session.getAttribute("token");
+        Cookie cookie = new Cookie("token", token);
+
+        // 2. Configurar atributos de seguridad
+        cookie.setHttpOnly(true);  // Inaccesible para JS (XSS) [4]
+        cookie.setSecure(true);    // Solo HTTPS [3]
+        cookie.setPath("/");       // Disponible en todo el dominio [3]
+        cookie.setMaxAge(3600);    // Expiración en segundos (1 hora) [5]
+
+        // 3. Añadir a la respuesta
+        response.addCookie(cookie);
+
+        return "Cookie HttpOnly configurada";
+    }
+
     @GetMapping
     public String Index(Model model, HttpSession session) {
 
         RestTemplate restTemplate = new RestTemplate();
-        
+
         String token = (String) session.getAttribute("token");
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "Bearer " + token);
@@ -79,7 +112,7 @@ public class UsuarioController {
     }
 
     @GetMapping("form")
-    public String Accion(Model model) {
+    public String Accion(Model model, HttpSession session) {
         Result result = new Result();
 
         RestTemplate restTemplate = new RestTemplate();
@@ -88,9 +121,9 @@ public class UsuarioController {
 
         try {
             //paises
-            ResponseEntity<Result> responsePaises = restTemplate.exchange(rutaBase + "/api/usuario/Pais",
+            ResponseEntity<Result> responsePaises = restTemplate.exchange(rutaBase + "/api/pais",
                     HttpMethod.GET,
-                    null,
+                    Cabecera(session),
                     new ParameterizedTypeReference<Result>() {
             });
             model.addAttribute("paises", responsePaises.getBody().objects);
@@ -98,7 +131,7 @@ public class UsuarioController {
             //roles
             ResponseEntity<Result> responseRoles = restTemplate.exchange(rutaBase + "/api/usuario/Rol",
                     HttpMethod.GET,
-                    null,
+                    Cabecera(session),
                     new ParameterizedTypeReference<Result>() {
             });
             model.addAttribute("roles", responseRoles.getBody().objects);
@@ -111,7 +144,7 @@ public class UsuarioController {
     }
 
     @PostMapping("form")                                                                                                        //del model vienen todas las modificaciones
-    public String Accion(@ModelAttribute("usuario") Usuario usuario, BindingResult bindingResult, @RequestParam("imagenFile") MultipartFile imagenFile, Model model) {
+    public String Accion(@ModelAttribute("usuario") Usuario usuario, BindingResult bindingResult, @RequestParam("imagenFile") MultipartFile imagenFile, Model model, HttpSession session) {
         Result result = new Result();
         RestTemplate restTemplate = new RestTemplate();
         try {
@@ -180,14 +213,14 @@ public class UsuarioController {
     }
 
     @GetMapping("/delete/{IdUsuario}")
-    public String DeteleUsuario(@PathVariable("IdUsuario") int identificador, RedirectAttributes redirectAttributes) {
+    public String DeteleUsuario(@PathVariable("IdUsuario") int identificador, RedirectAttributes redirectAttributes, HttpSession session) {
         Result result = new Result();
 
         RestTemplate restTemplate = new RestTemplate();
 
         ResponseEntity<Result> responseBorrar = restTemplate.exchange(rutaBase + "/api/usuario/Delete/Usuario/{identificador}",
                 HttpMethod.DELETE,
-                null,
+                Cabecera(session),
                 new ParameterizedTypeReference<Result>() {
         },
                 identificador);
@@ -204,13 +237,15 @@ public class UsuarioController {
     }
 
     @GetMapping("/details/{IdUsuario}")
-    public String Details(@PathVariable("IdUsuario") int identificador, Model model) {
+    public String Details(@PathVariable("IdUsuario") int identificador, Model model, HttpSession session) {
         RestTemplate restTemplate = new RestTemplate();
         try {
 
+
+
             ResponseEntity<Result<Usuario>> responseGetById = restTemplate.exchange(rutaBase + "/api/usuario/{identificador}",
                     HttpMethod.GET,
-                    null,
+                    Cabecera(session),
                     new ParameterizedTypeReference<Result<Usuario>>() {
             },
                     identificador);
@@ -224,15 +259,15 @@ public class UsuarioController {
                 //roles
                 ResponseEntity<Result> responseRoles = restTemplate.exchange(rutaBase + "/api/usuario/Rol",
                         HttpMethod.GET,
-                        null,
+                        Cabecera(session),
                         new ParameterizedTypeReference<Result>() {
                 });
                 model.addAttribute("roles", responseRoles.getBody().objects);
 
                 //roles
-                ResponseEntity<Result> responsePaises = restTemplate.exchange(rutaBase + "/api/usuario/Pais",
+                ResponseEntity<Result> responsePaises = restTemplate.exchange(rutaBase + "/api/pais",
                         HttpMethod.GET,
-                        null,
+                        Cabecera(session),
                         new ParameterizedTypeReference<Result>() {
                 });
                 model.addAttribute("paises", responsePaises.getBody().objects);
@@ -462,7 +497,7 @@ public class UsuarioController {
                     HttpMethod.POST,
                     null,
                     Result.class);
-            
+
             result = responseProcesar.getBody();
             if (result.correct) {
                 redirectAttributes.addFlashAttribute("successMesage", "Carga masiva exitosa.");
