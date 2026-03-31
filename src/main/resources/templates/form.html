@@ -344,14 +344,28 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
         $(document).ready(function () {
             console.log("Ya termina de cargar la  pagina");
 
+            function getCookie(name) {
+                let nameEQ = name + "=";
+                let ca = document.cookie.split(';');
+                for (let i = 0; i < ca.length; i++) {
+                    let c = ca[i];
+                    while (c.charAt(0) == ' ')
+                        c = c.substring(1, c.length);
+                    if (c.indexOf(nameEQ) == 0)
+                        return c.substring(nameEQ.length, c.length);
+                }
+                return null;
+            }
+
             $("#ddlpais").change(function () {
                 console.log("Ya cambie");
                 var IdPais = $("#ddlpais").val();
                 if (IdPais != 0) {
+                    const token = getCookie("jwtToken");
                     $.ajax({
-                        url: "http://127.0.0.1:8080/api/usuario/Estado?identificador=" + IdPais,
+                        url: "/ajax/estados",
                         type: 'GET',
-                        dataType: 'json',
+                        data: { idPais: IdPais },
                         success: function (data, textStatus, jqXHR) {
                             console.log("Todo ok");
                             $("#ddlestado").empty();
@@ -362,7 +376,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                             });
                         },
                         error: function (jqXHR, textStatus, errorThrown) {
-                            alert("No se pudo procesar la tarea");
+                            alert("No se pudo procesar la tarea estado");
                         }
                     });
                 } else {
@@ -389,9 +403,9 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                 var IdEstado = $("#ddlestado").val();
                 if (IdEstado != 0) {
                     $.ajax({
-                        url: "http://127.0.0.1:8080/api/usuario/Municipio?identificador=" + IdEstado,
+                        url: "/ajax/municipios",
                         type: 'GET',
-                        dataType: 'json',
+                        data: { idEstado: IdEstado },
                         success: function (data, textStatus, jqXHR) {
                             console.log("Todo ok, estado");
                             $("#ddlmunicipio").empty();
@@ -402,7 +416,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                             });
                         },
                         error: function (jqXHR, textStatus, errorThrown) {
-                            alert("No se pudo procesar la tarea, estado");
+                            alert("No se pudo procesar la tarea, municipio");
                         }
                     });
                 } else {
@@ -427,9 +441,9 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                 var IdMunicipio = $("#ddlmunicipio").val();
                 if (IdMunicipio != 0) {
                     $.ajax({
-                        url: "http://127.0.0.1:8080/api/usuario/Colonia?identificador=" + IdMunicipio,
+                        url: "/ajax/colonias",
                         type: 'GET',
-                        dataType: 'json',
+                        data: { idColonia: IdMunicipio },
                         success: function (data, textStatus, jqXHR) {
                             console.log("Todo ok, municipio");
                             $("#ddlcolonia").empty();
@@ -450,7 +464,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                             });
                         },
                         error: function (jqXHR, textStatus, errorThrown) {
-                            alert("No se pudo procesar la tarea, municipio");
+                            alert("No se pudo procesar la tarea, colonia");
                         }
                     });
                 } else {

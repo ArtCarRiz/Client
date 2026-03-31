@@ -65,24 +65,6 @@ public class UsuarioController {
         return entity;
     }
 
-    @GetMapping("/set-cookie")
-    public String setCookie(HttpServletResponse response, HttpSession session) {
-        // 1. Crear la cookie
-        String token = (String) session.getAttribute("token");
-        Cookie cookie = new Cookie("token", token);
-
-        // 2. Configurar atributos de seguridad
-        cookie.setHttpOnly(true);  // Inaccesible para JS (XSS) [4]
-        cookie.setSecure(true);    // Solo HTTPS [3]
-        cookie.setPath("/");       // Disponible en todo el dominio [3]
-        cookie.setMaxAge(3600);    // Expiración en segundos (1 hora) [5]
-
-        // 3. Añadir a la respuesta
-        response.addCookie(cookie);
-
-        return "Cookie HttpOnly configurada";
-    }
-
     @GetMapping
     public String Index(Model model, HttpSession session) {
 
@@ -178,11 +160,13 @@ public class UsuarioController {
             }
 
             HttpHeaders headers = new HttpHeaders();
+            String token = (String) session.getAttribute("token");
+            headers.setBearerAuth(token);
             headers.setContentType(MediaType.MULTIPART_FORM_DATA);
 
             usuario.setImagen(null);
             MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
-
+        
             body.add("datos", usuario);
 
             if (!imagenFile.isEmpty()) {
@@ -197,7 +181,7 @@ public class UsuarioController {
                     Result.class);
 
             result.correct = true;
-            if (result.correct) {
+            if (response.getBody() != null && response.getBody().correct == true) {
                 return "redirect:/usuario";
             } else {
                 model.addAttribute("error", response.getBody().errorMessage);
@@ -211,7 +195,7 @@ public class UsuarioController {
         }
         return "redirect:/usuario";
     }
-
+    
     @GetMapping("/delete/{IdUsuario}")
     public String DeteleUsuario(@PathVariable("IdUsuario") int identificador, RedirectAttributes redirectAttributes, HttpSession session) {
         Result result = new Result();

@@ -6,8 +6,11 @@ package com.DIGIS01.ACardenasProgramacionNCapas.Controller;
 
 import com.DIGIS01.ACardenasProgramacionNCapas.ML.Result;
 import com.DIGIS01.ACardenasProgramacionNCapas.ML.Usuario;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.websocket.Session;
+import java.net.http.HttpResponse;
 import java.util.HashMap;
 import java.util.Map;
 import org.springframework.core.ParameterizedTypeReference;
@@ -39,7 +42,7 @@ public class LoginController {
 
     @GetMapping
     public String login(@RequestParam(value = "error", required = false) String error, Model model) {
-         model.addAttribute("usuario", new Usuario());
+        model.addAttribute("usuario", new Usuario());
         if (error != null) {
             model.addAttribute("errorlogin", error);
         }
@@ -49,7 +52,7 @@ public class LoginController {
     }
 
     @PostMapping
-    public String procesar(@ModelAttribute("username") String username, @ModelAttribute("password") String password, HttpSession session) {
+    public String procesar(@ModelAttribute("username") String username, @ModelAttribute("password") String password, HttpSession session, HttpServletResponse response) {
         Result result = new Result();
         try {
 
@@ -70,20 +73,29 @@ public class LoginController {
 
             if (responseLogin.getBody() != null) {
                 Result resultR = responseLogin.getBody();
-                
+
                 String token = (String) resultR.object;
                 session.setAttribute("token", token);
+
+                Cookie jwtCookie = new Cookie("jwtToken", token);
+                jwtCookie.setHttpOnly(false); // Ponlo en false para que AJAX pueda leerlo
+                jwtCookie.setPath("/");
+                jwtCookie.setMaxAge(3600);
+
+                response.addCookie(jwtCookie);
+
                 String rolLogeado = resultR.errorMessage;
                 if (resultR.correct) {
                     return "redirect:/usuario";
+                }else{
+                    return null;
                 }
-                return "/login";
+
             }
 
         } catch (Exception e) {
         }
-
-        return "usuario";
+        return "/login";
     }
 
 }
