@@ -275,11 +275,9 @@
                 checkbox.prop('disabled', true);
                 console.log("ID: " + idUsuario + " Estatus: " + estatus);
                 $.ajax({
-                    type: "PATCH",
-                    xhrFields: {
-                        withCredentials: true // Esto permite enviar la cookie HttpOnly
-                    },
-                    url: "http://localhost:8080/api/usuario/Estatus?identificador=" + idUsuario + "&estatus=" + estatus,
+                    type: "GET",
+                    data: { estatus, idUsuario: estatus, idUsuario},
+                    url: "/ajax/estatus",
                     success: function (response) {
                         if (response.correct) {
 

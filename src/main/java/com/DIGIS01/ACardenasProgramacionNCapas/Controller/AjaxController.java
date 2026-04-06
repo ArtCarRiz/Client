@@ -107,5 +107,24 @@ public class AjaxController {
 
         return result;
     }
+    
+    @GetMapping("/estatus")
+    public Result estatus (@RequestParam int estatus, @RequestParam int idUsuario,HttpSession session){
+        Result result = new Result();
+        try {
+            RestTemplate restTemplate = new RestTemplate();
+            ResponseEntity<Result> response = restTemplate.exchange(rutaBase + "/Estatus", 
+                    HttpMethod.PATCH,
+                    Cabecera(session),
+                    Result.class);
+            
+        } catch (Exception e) {
+            result.correct = false;
+            result.errorMessage = e.getLocalizedMessage();
+            result.ex = e;
+        }
+        
+        return result;
+    }
 
 }
